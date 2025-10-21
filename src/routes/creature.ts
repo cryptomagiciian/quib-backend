@@ -3,6 +3,8 @@ import { creatureController } from '../controllers/creatureController';
 import { authenticateToken } from '../middleware/auth';
 import { validate, schemas } from '../middleware/validation';
 import { chatLimiter } from '../middleware/rateLimiter';
+import { aiService } from '../services/aiService';
+import logger from '../utils/logger';
 
 const router = Router();
 
@@ -15,37 +17,50 @@ router.get('/test', (req, res) => {
   });
 });
 
-// Simple chat endpoint for Lovable (no auth needed for now)
-router.post('/chat', (req, res) => {
-  const { message } = req.body;
-  
-  // Simple AI response
-  const responses = [
-    "Hello! I'm your Quib! How are you today?",
-    "That's interesting! Tell me more!",
-    "I love chatting with you! What else is on your mind?",
-    "You're amazing! I'm so happy to be your companion!",
-    "Let's explore the world together! What should we do next?"
-  ];
-  
-  const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-  
-  res.json({
-    success: true,
-    data: {
-      conversation: {
-        message,
-        response: randomResponse,
-        sentimentScore: 0.8,
-        timestamp: new Date().toISOString()
-      },
-      creature: {
-        moodScore: 85,
-        xp: 100
-      },
-      keywords: []
+// Advanced chat endpoint for Lovable (no auth needed for now)
+router.post('/chat', async (req, res) => {
+  try {
+    const { message } = req.body;
+    
+    if (!message) {
+      return res.status(400).json({
+        success: false,
+        error: 'Message is required'
+      });
     }
-  });
+
+    // Use the advanced AI service
+    const { response, sentimentScore, keywords } = await aiService.generateCreatureResponse(
+      message,
+      'lovable-user', // Default user ID for now
+      'HATCHLING',
+      75, // Default mood score
+      [] // No conversation history for now
+    );
+    
+    res.json({
+      success: true,
+      data: {
+        conversation: {
+          message,
+          response,
+          sentimentScore,
+          timestamp: new Date().toISOString()
+        },
+        creature: {
+          moodScore: 75 + (sentimentScore * 20), // Adjust mood based on sentiment
+          xp: 100
+        },
+        keywords
+      }
+    });
+  } catch (error) {
+    logger.error('Chat endpoint error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to process chat message'
+    });
+  }
 });
 
 // Simple submit task endpoint for Lovable (no auth needed for now)
