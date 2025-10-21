@@ -12,8 +12,8 @@ const app = express();
 app.use(helmet());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.com', 'https://*.lovable.app'] 
-    : ['http://localhost:3000', 'http://localhost:3001', 'https://*.lovable.app'],
+    ? ['https://your-frontend-domain.com', 'https://*.lovable.app', 'https://lovable.dev'] 
+    : ['http://localhost:3000', 'http://localhost:3001', 'https://*.lovable.app', 'https://lovable.dev'],
   credentials: true
 }));
 

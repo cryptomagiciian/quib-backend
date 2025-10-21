@@ -34,13 +34,14 @@ export const config = {
   enableEvolutionTest: process.env.ENABLE_EVOLUTION_TEST === 'true',
   
   // Hybrid Mode (Lovable Integration)
-  hybridMode: process.env.HYBRID_MODE === 'true' || true, // Default to hybrid mode
+  hybridMode: process.env.HYBRID_MODE === 'true' || false, // Default to standalone mode
   lovableApiKey: process.env.LOVABLE_API_KEY || '',
 };
 
 // Validate required environment variables
 const requiredEnvVars = [
-  'JWT_SECRET'
+  'JWT_SECRET',
+  'DATABASE_URL'
 ];
 
 for (const envVar of requiredEnvVars) {
@@ -50,16 +51,14 @@ for (const envVar of requiredEnvVars) {
 }
 
 // Warn about missing optional variables
-if (!process.env.DATABASE_URL && !config.hybridMode) {
-  console.warn('WARNING: DATABASE_URL not set. Database features will not work.');
-}
-
 if (!process.env.OPENAI_API_KEY) {
   console.warn('WARNING: OPENAI_API_KEY not set. AI features will not work.');
 }
 
 if (config.hybridMode) {
   console.log('🚀 Running in HYBRID MODE - Lovable handles database, backend handles AI');
+} else {
+  console.log('🚀 Running in STANDALONE MODE - Backend handles everything');
 }
 
 export default config;

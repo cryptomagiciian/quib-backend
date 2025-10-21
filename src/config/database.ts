@@ -5,10 +5,10 @@ declare global {
   var __prisma: PrismaClient | undefined;
 }
 
-// Only initialize Prisma if not in hybrid mode or if DATABASE_URL is provided
+// Initialize Prisma in standalone mode
 let prisma: PrismaClient | null = null;
 
-if (!config.hybridMode && config.databaseUrl) {
+if (!config.hybridMode) {
   prisma = globalThis.__prisma || new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
@@ -16,7 +16,7 @@ if (!config.hybridMode && config.databaseUrl) {
   if (process.env.NODE_ENV !== 'production') {
     globalThis.__prisma = prisma;
   }
-} else if (config.hybridMode) {
+} else {
   console.log('🚀 Hybrid mode: Database operations handled by Lovable/Supabase');
 }
 
