@@ -18,6 +18,39 @@ router.get('/health', (req, res) => {
   });
 });
 
+// Simple tasks endpoint for Lovable (no auth needed for now)
+router.get('/tasks', (req, res) => {
+  res.json({
+    success: true,
+    data: [
+      {
+        id: 'task-1',
+        title: 'Daily Chat',
+        description: 'Chat with your Quib today!',
+        type: 'DAILY_CHALLENGE',
+        completed: false,
+        xp: 50
+      },
+      {
+        id: 'task-2',
+        title: 'Feed Your Quib',
+        description: 'Give your Quib some love and attention',
+        type: 'CARE',
+        completed: true,
+        xp: 25
+      },
+      {
+        id: 'task-3',
+        title: 'Explore Together',
+        description: 'Take your Quib on an adventure',
+        type: 'ADVENTURE',
+        completed: false,
+        xp: 75
+      }
+    ]
+  });
+});
+
 // API routes
 router.use('/auth', authRoutes);
 router.use('/creature', creatureRoutes);

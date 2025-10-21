@@ -74,6 +74,7 @@ router.get('/', (req, res) => {
   });
 });
 
+
 // All other routes require authentication
 router.use(authenticateToken);
 
