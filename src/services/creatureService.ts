@@ -15,6 +15,10 @@ export class CreatureService {
    * Get creature state for a user
    */
   async getCreatureState(userId: string): Promise<CreatureState> {
+    if (!prisma) {
+      throw new Error('Database not available in hybrid mode. Use Lovable endpoints instead.');
+    }
+    
     const creature = await prisma.creature.findUnique({
       where: { userId },
       include: {
@@ -120,6 +124,10 @@ export class CreatureService {
    * Evolve creature to next stage
    */
   async evolveCreature(userId: string, overrideTimeGates = false): Promise<CreatureState> {
+    if (!prisma) {
+      throw new Error('Database not available in hybrid mode. Use Lovable endpoints instead.');
+    }
+    
     const creature = await prisma.creature.findUnique({
       where: { userId },
       include: {
@@ -264,6 +272,10 @@ export class CreatureService {
    * Update creature mood based on chat sentiment
    */
   async updateMoodFromChat(userId: string, sentimentScore: number): Promise<void> {
+    if (!prisma) {
+      throw new Error('Database not available in hybrid mode. Use Lovable endpoints instead.');
+    }
+    
     const creature = await prisma.creature.findUnique({
       where: { userId }
     });
@@ -306,6 +318,10 @@ export class CreatureService {
     sentimentScore: number,
     keywords: string[]
   ): Promise<void> {
+    if (!prisma) {
+      throw new Error('Database not available in hybrid mode. Use Lovable endpoints instead.');
+    }
+    
     const creature = await prisma.creature.findUnique({
       where: { userId },
       select: { id: true, moodScore: true }
@@ -334,7 +350,7 @@ export class CreatureService {
 
     // Update user keywords in creature
     if (keywords.length > 0) {
-      const currentKeywords = await prisma.creature.findUnique({
+      const currentKeywords = await prisma!.creature.findUnique({
         where: { userId },
         select: { userKeywords: true }
       });
@@ -387,6 +403,10 @@ export class CreatureService {
    * Get creature statistics
    */
   async getCreatureStats(userId: string) {
+    if (!prisma) {
+      throw new Error('Database not available in hybrid mode. Use Lovable endpoints instead.');
+    }
+    
     const [creature, tasks, conversations, evolutionLogs, chatMemories] = await Promise.all([
       prisma.creature.findUnique({
         where: { userId },
