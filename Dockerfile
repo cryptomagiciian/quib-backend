@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --only=production
+# Install all dependencies (including dev dependencies for build)
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -18,6 +18,9 @@ RUN npx prisma generate
 
 # Build the application
 RUN npm run build
+
+# Remove dev dependencies to reduce image size
+RUN npm prune --production
 
 # Create logs directory
 RUN mkdir -p logs
