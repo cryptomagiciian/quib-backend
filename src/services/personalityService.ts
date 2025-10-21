@@ -296,7 +296,7 @@ Return only the JSON array, no other text.`;
 
     const creature = await prisma.creature.findUnique({
       where: { userId },
-      select: { lastChatDate: true, dailyChatCount: true, totalChats: true }
+      select: { lastChatDate: true, dailyChatCount: true, totalChats: true, missedDays: true }
     });
 
     if (!creature) return;
@@ -305,7 +305,7 @@ Return only the JSON array, no other text.`;
     const isNewDay = !lastChatDate || lastChatDate < today;
 
     let dailyChatCount = isNewDay ? 1 : creature.dailyChatCount + 1;
-    let missedDays = creature.missedDays;
+    let missedDays = (creature as any).missedDays || 0;
 
     // Calculate missed days
     if (lastChatDate && isNewDay) {
