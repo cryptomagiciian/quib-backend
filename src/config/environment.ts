@@ -15,7 +15,7 @@ export const config = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   
   // OpenAI
-  openaiApiKey: process.env.OPENAI_API_KEY!,
+  openaiApiKey: process.env.OPENAI_API_KEY || '',
   
   // BNB Chain
   bnbRpcUrl: process.env.BNB_RPC_URL || 'https://bsc-dataseed.binance.org/',
@@ -37,14 +37,18 @@ export const config = {
 // Validate required environment variables
 const requiredEnvVars = [
   'DATABASE_URL',
-  'JWT_SECRET',
-  'OPENAI_API_KEY'
+  'JWT_SECRET'
 ];
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
     throw new Error(`Missing required environment variable: ${envVar}`);
   }
+}
+
+// Warn about missing optional variables
+if (!process.env.OPENAI_API_KEY) {
+  console.warn('WARNING: OPENAI_API_KEY not set. AI features will not work.');
 }
 
 export default config;
