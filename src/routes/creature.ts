@@ -48,6 +48,38 @@ router.post('/chat', (req, res) => {
   });
 });
 
+// Simple submit task endpoint for Lovable (no auth needed for now)
+router.post('/submit-task', (req, res) => {
+  const { taskId, taskType, title } = req.body;
+  
+  // Calculate XP based on task type
+  const xpRewards = {
+    'DAILY_CHALLENGE': 50,
+    'CARE': 25,
+    'ADVENTURE': 75,
+    'CHAT_INTERACTION': 10
+  };
+  
+  const xpGained = xpRewards[taskType] || 25;
+  
+  res.json({
+    success: true,
+    data: {
+      task: {
+        id: taskId,
+        title: title || 'Task Completed',
+        type: taskType,
+        completed: true,
+        completedAt: new Date().toISOString()
+      },
+      xpGained,
+      creature: {
+        xp: 100 + xpGained
+      }
+    }
+  });
+});
+
 // Simple creature endpoint for Lovable (no auth needed for now)
 router.get('/', (req, res) => {
   res.json({
