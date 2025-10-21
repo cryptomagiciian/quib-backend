@@ -22,6 +22,8 @@
     "noFallthroughCasesInSwitch": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "noImplicitReturns": false,
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {

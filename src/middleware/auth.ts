@@ -34,7 +34,7 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
       });
     }
 
-    const decoded = jwt.verify(token, config.jwtSecret) as JwtPayload;
+    const decoded = jwt.verify(token, config.jwtSecret) as any;
     
     // Verify user still exists
     const user = await prisma.user.findUnique({
@@ -134,7 +134,7 @@ export const generateToken = (user: AuthUser): string => {
 
   return jwt.sign(payload, config.jwtSecret, { 
     expiresIn: config.jwtExpiresIn 
-  });
+  } as any);
 };
 
 /**
@@ -146,7 +146,7 @@ export const optionalAuth = async (req: Request, res: Response, next: NextFuncti
     const token = authHeader && authHeader.split(' ')[1];
 
     if (token) {
-      const decoded = jwt.verify(token, config.jwtSecret) as JwtPayload;
+      const decoded = jwt.verify(token, config.jwtSecret) as any;
       const user = await prisma.user.findUnique({
         where: { id: decoded.userId },
         select: { id: true, wallet: true, email: true, username: true }
