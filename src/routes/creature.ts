@@ -6,7 +6,16 @@ import { chatLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// All routes require authentication
+// Test endpoint without authentication
+router.get('/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Creature API is working!',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// All other routes require authentication
 router.use(authenticateToken);
 
 // Creature state and management
