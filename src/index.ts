@@ -11,9 +11,7 @@ const app = express();
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.com', 'https://*.lovable.app', 'https://lovable.dev'] 
-    : ['http://localhost:3000', 'http://localhost:3001', 'https://*.lovable.app', 'https://lovable.dev'],
+  origin: true, // Allow all origins for now
   credentials: true
 }));
 
