@@ -16,7 +16,16 @@ if (!config.hybridMode && config.databaseUrl) {
   if (process.env.NODE_ENV !== 'production') {
     globalThis.__prisma = prisma;
   }
-  console.log('🚀 Database connected in standalone mode');
+  
+  // Test database connection
+  prisma.$connect()
+    .then(() => {
+      console.log('🚀 Database connected in standalone mode');
+    })
+    .catch((error) => {
+      console.error('❌ Database connection failed:', error.message);
+      console.log('🔧 Make sure DATABASE_URL is correct and database exists');
+    });
 } else if (config.hybridMode) {
   console.log('🚀 Hybrid mode: Database operations handled by Lovable/Supabase');
 } else {
