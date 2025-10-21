@@ -68,7 +68,7 @@ export class PersonalityService {
       await prisma.creature.update({
         where: { userId },
         data: {
-          personalityProfile: personality,
+          personalityProfile: personality as any,
           energy: personality.energy,
           tone: personality.tone,
           bondType: personality.bondType,
@@ -98,7 +98,7 @@ export class PersonalityService {
       await prisma.creature.update({
         where: { userId },
         data: {
-          visualTraits: traits,
+          visualTraits: traits as any,
           hornType: traits.hornType,
           furColor: traits.furColor,
           eyeStyle: traits.eyeStyle,
@@ -170,7 +170,7 @@ Keep the core personality but make it more personalized to this user.`;
       await prisma.creature.update({
         where: { userId },
         data: {
-          personalityProfile: updatedPersonality,
+          personalityProfile: updatedPersonality as any,
           energy: updatedPersonality.energy,
           tone: updatedPersonality.tone,
           bondType: updatedPersonality.bondType,
@@ -209,7 +209,7 @@ Keep the core personality but make it more personalized to this user.`;
       return await this.generateInitialPersonality(userId);
     }
 
-    return creature.personalityProfile as PersonalityProfile;
+    return creature.personalityProfile as any;
   }
 
   /**
@@ -233,7 +233,7 @@ Keep the core personality but make it more personalized to this user.`;
       return await this.generateVisualTraits(userId);
     }
 
-    return creature.visualTraits as VisualTraits;
+    return creature.visualTraits as any;
   }
 
   /**
