@@ -15,7 +15,7 @@ const ERC20_ABI = [
 
 export class TokenService {
   private provider: ethers.JsonRpcProvider;
-  private tokenContract: ethers.Contract;
+  private tokenContract?: ethers.Contract;
 
   constructor() {
     this.provider = new ethers.JsonRpcProvider(config.bnbRpcUrl);
@@ -36,7 +36,7 @@ export class TokenService {
   async getTokenBalance(walletAddress: string): Promise<string> {
     try {
       // Check if token contract is deployed
-      if (config.tokenContractAddress === '0x0000000000000000000000000000000000000000') {
+      if (!this.tokenContract || config.tokenContractAddress === '0x0000000000000000000000000000000000000000') {
         logger.info('Token contract not deployed yet, returning 0 balance');
         return '0';
       }
@@ -64,7 +64,7 @@ export class TokenService {
   }> {
     try {
       // Check if token contract is deployed
-      if (config.tokenContractAddress === '0x0000000000000000000000000000000000000000') {
+      if (!this.tokenContract || config.tokenContractAddress === '0x0000000000000000000000000000000000000000') {
         return {
           name: 'QUIB Token',
           symbol: 'QUIB',

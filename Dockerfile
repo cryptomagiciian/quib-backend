@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies for build)
+# Install all dependencies (including dev dependencies for ts-node)
 RUN npm install
 
 # Copy source code
@@ -15,12 +15,6 @@ COPY . .
 
 # Generate Prisma client
 RUN npx prisma generate
-
-# Build the application
-RUN npm run build
-
-# Remove dev dependencies to reduce image size
-RUN npm prune --production
 
 # Create logs directory
 RUN mkdir -p logs
