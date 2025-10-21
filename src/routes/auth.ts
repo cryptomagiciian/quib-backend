@@ -35,7 +35,11 @@ router.get('/profile',
 
 router.put('/profile', 
   authenticateToken,
-  validate(schemas.userRegistration.partial()),
+  validate(Joi.object({
+    username: Joi.string().min(3).max(30).optional(),
+    email: Joi.string().email().optional(),
+    wallet: Joi.string().optional()
+  })),
   authController.updateProfile
 );
 

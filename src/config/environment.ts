@@ -8,7 +8,7 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   
   // Database
-  databaseUrl: process.env.DATABASE_URL!,
+  databaseUrl: process.env.DATABASE_URL || '',
   
   // JWT
   jwtSecret: process.env.JWT_SECRET!,
@@ -36,7 +36,6 @@ export const config = {
 
 // Validate required environment variables
 const requiredEnvVars = [
-  'DATABASE_URL',
   'JWT_SECRET'
 ];
 
@@ -44,6 +43,11 @@ for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
     throw new Error(`Missing required environment variable: ${envVar}`);
   }
+}
+
+// Warn about missing optional variables
+if (!process.env.DATABASE_URL) {
+  console.warn('WARNING: DATABASE_URL not set. Database features will not work.');
 }
 
 // Warn about missing optional variables
