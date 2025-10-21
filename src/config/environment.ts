@@ -40,9 +40,13 @@ export const config = {
 
 // Validate required environment variables
 const requiredEnvVars = [
-  'JWT_SECRET',
-  'DATABASE_URL'
+  'JWT_SECRET'
 ];
+
+// Check for DATABASE_URL if not in hybrid mode
+if (!config.hybridMode && !config.databaseUrl) {
+  console.warn('⚠️ WARNING: DATABASE_URL not set. Database features will not work in standalone mode.');
+}
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {

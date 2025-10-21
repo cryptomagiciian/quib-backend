@@ -23,7 +23,7 @@ export class AIService {
     conversationHistory: Array<{ message: string; response: string; timestamp: Date }>
   ): Promise<{ response: string; sentimentScore: number; keywords: string[] }> {
     try {
-      // Get personality profile
+      // Get personality profile from database
       const personality = await personalityService.getPersonalityProfile(userId);
       
       // Analyze user's message for intent and emotional tone
@@ -73,6 +73,9 @@ export class AIService {
       };
     } catch (error) {
       logger.error('Advanced AI service error:', error);
+      logger.error('Error details:', error.message);
+      logger.error('Stack trace:', error.stack);
+      
       // Fallback to simple response
       return {
         response: 'I\'m here with you! ❤️',
@@ -280,6 +283,15 @@ Adapt your response style based on the user's communication patterns and emotion
     if (moodScore >= 70) return 'high';
     if (moodScore >= 40) return 'medium';
     return 'low';
+  }
+
+  private extractKeywords(message: string): string[] {
+    const words = message.toLowerCase()
+      .replace(/[^\w\s]/g, '')
+      .split(/\s+/)
+      .filter(word => word.length > 3);
+    
+    return words.slice(0, 5);
   }
 
   /**

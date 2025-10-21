@@ -32,7 +32,7 @@ router.post('/chat', async (req, res) => {
     // Use the advanced AI service
     const { response, sentimentScore, keywords } = await aiService.generateCreatureResponse(
       message,
-      'lovable-user', // Default user ID for now
+      'lovable-user-' + Date.now(), // Unique user ID for each session
       'HATCHLING',
       75, // Default mood score
       [] // No conversation history for now
