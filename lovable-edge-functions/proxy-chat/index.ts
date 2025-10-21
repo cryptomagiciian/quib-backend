@@ -60,7 +60,7 @@ serve(async (req) => {
 
     // Forward request to your Cursor backend
     const backendUrl = Deno.env.get('CURSOR_BACKEND_URL') || 'http://localhost:3000'
-    const backendResponse = await fetch(`${backendUrl}/api/creature/chat`, {
+    const backendResponse = await fetch(`${backendUrl}/api/lovable/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -72,6 +72,7 @@ serve(async (req) => {
         creatureId: creature.id,
         currentStage: creature.current_stage,
         moodScore: creature.mood_score,
+        currentXP: creature.xp || 0,
         personality: creature.personality_profile,
         visualTraits: creature.visual_traits
       })

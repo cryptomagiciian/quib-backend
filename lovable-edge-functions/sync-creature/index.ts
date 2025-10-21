@@ -110,7 +110,7 @@ async function createNewCreature(supabaseClient: any, userId: string) {
   try {
     // Call your Cursor backend to generate personality and visual traits
     const backendUrl = Deno.env.get('CURSOR_BACKEND_URL') || 'http://localhost:3000'
-    const backendResponse = await fetch(`${backendUrl}/api/creature/create`, {
+    const backendResponse = await fetch(`${backendUrl}/api/lovable/creature`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

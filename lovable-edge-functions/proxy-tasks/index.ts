@@ -102,7 +102,7 @@ serve(async (req) => {
       // Forward to your Cursor backend for XP calculation
       try {
         const backendUrl = Deno.env.get('CURSOR_BACKEND_URL') || 'http://localhost:3000'
-        const backendResponse = await fetch(`${backendUrl}/api/creature/submit-task`, {
+        const backendResponse = await fetch(`${backendUrl}/api/lovable/task`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -113,7 +113,8 @@ serve(async (req) => {
             title,
             description,
             userId: user.id,
-            creatureId: creature.id
+            creatureId: creature.id,
+            currentXP: creature.xp || 0
           })
         })
 

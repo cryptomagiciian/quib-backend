@@ -9,7 +9,7 @@ const router = Router();
 router.get('/health', lovableController.healthCheck);
 
 // Create creature
-router.post('/creature/create',
+router.post('/creature',
   validate(Joi.object({
     userId: Joi.string().required()
   })),
@@ -17,13 +17,14 @@ router.post('/creature/create',
 );
 
 // Process chat
-router.post('/creature/chat',
+router.post('/chat',
   validate(Joi.object({
     message: Joi.string().required(),
     userId: Joi.string().required(),
     creatureId: Joi.string().optional(),
     currentStage: Joi.string().optional(),
     moodScore: Joi.number().optional(),
+    currentXP: Joi.number().optional(),
     personality: Joi.object().optional(),
     visualTraits: Joi.object().optional()
   })),
@@ -31,7 +32,7 @@ router.post('/creature/chat',
 );
 
 // Process task
-router.post('/creature/submit-task',
+router.post('/task',
   validate(Joi.object({
     taskType: Joi.string().required(),
     title: Joi.string().required(),
