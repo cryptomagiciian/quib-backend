@@ -1,0 +1,168 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  wallet    String?  @unique
+  email     String?  @unique
+  username  String?  @unique
+  password  String?  // For traditional auth fallback
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  creature      Creature?
+  tasks         Task[]
+  conversations Conversation[]
+  evolutionLogs EvolutionLog[]
+  tokenClaims   TokenClaim[]
+  chatMemories  ChatMemory[]
+
+  @@map("users")
+}
+
+model Creature {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  currentStage  EvolutionStage @default(HATCHLING)
+  moodScore     Float     @default(50.0) // 0-100
+  xp            Int       @default(0)
+  lastEvolution DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Personality Profile
+  personalityProfile Json? // Dynamic personality traits
+  energy            String @default("medium") // high, medium, low
+  tone              String @default("playful") // playful, calm, mystical, goofy
+  bondType          String @default("loyal guardian") // loyal guardian, chaotic sidekick, curious spirit
+  favoriteWords     String[] @default([])
+  userKeywords      String[] @default([])
+  evolutionPathVariant String @default("A") // A, B, C
+
+  // Visual Traits
+  visualTraits Json? // Visual appearance traits
+  hornType     String @default("curved")
+  furColor     String @default("galactic blue")
+  eyeStyle     String @default("starry swirl")
+  tailType     String @default("twist puff")
+  auraEffect   String @default("fireflies")
+  accessory    String @default("mini crown")
+
+  // Chat Memory & Engagement
+  dailyChatCount    Int @default(0)
+  missedDays        Int @default(0)
+  engagementLevel   String @default("medium") // low, medium, high
+  lastChatDate      DateTime?
+  totalChats        Int @default(0)
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatMemories ChatMemory[]
+
+  @@map("creatures")
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  userId      String
+  taskType    TaskType
+  title       String
+  description String?
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tasks")
+}
+
+model Conversation {
+  id            String    @id @default(cuid())
+  userId        String
+  message       String
+  response      String?
+  sentimentScore Float?   // -1 to 1 (negative to positive)
+  timestamp     DateTime  @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("conversations")
+}
+
+model ChatMemory {
+  id            String    @id @default(cuid())
+  creatureId    String
+  userId        String
+  message       String
+  response      String
+  sentimentScore Float
+  moodScore     Float
+  keywords      String[]  @default([])
+  timestamp     DateTime  @default(now())
+  isImportant   Boolean   @default(false) // Marked as important memory
+
+  // Relations
+  creature Creature @relation(fields: [creatureId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("chat_memories")
+}
+
+model EvolutionLog {
+  id        String          @id @default(cuid())
+  userId    String
+  fromStage EvolutionStage
+  toStage   EvolutionStage
+  date      DateTime        @default(now())
+  reason    String?         // Why evolution occurred
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("evolution_logs")
+}
+
+model TokenClaim {
+  id            String    @id @default(cuid())
+  userId        String
+  amount        String    // BigInt as string for precision
+  txHash        String?   // Blockchain transaction hash
+  claimed       Boolean   @default(false)
+  claimedAt     DateTime?
+  createdAt     DateTime  @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("token_claims")
+}
+
+// Enums
+enum EvolutionStage {
+  EGG
+  HATCHLING
+  JUVENILE
+  ASCENDED
+  CELESTIAL
+}
+
+enum TaskType {
+  DAILY_CHALLENGE
+  CHAT_INTERACTION
+  TIME_BASED
+  CUSTOM
+}
