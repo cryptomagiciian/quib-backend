@@ -19,11 +19,15 @@ export class TokenService {
 
   constructor() {
     this.provider = new ethers.JsonRpcProvider(config.bnbRpcUrl);
-    this.tokenContract = new ethers.Contract(
-      config.tokenContractAddress,
-      ERC20_ABI,
-      this.provider
-    );
+    
+    // Only create contract if token address is set
+    if (config.tokenContractAddress !== '0x0000000000000000000000000000000000000000') {
+      this.tokenContract = new ethers.Contract(
+        config.tokenContractAddress,
+        ERC20_ABI,
+        this.provider
+      );
+    }
   }
 
   /**
@@ -31,6 +35,12 @@ export class TokenService {
    */
   async getTokenBalance(walletAddress: string): Promise<string> {
     try {
+      // Check if token contract is deployed
+      if (config.tokenContractAddress === '0x0000000000000000000000000000000000000000') {
+        logger.info('Token contract not deployed yet, returning 0 balance');
+        return '0';
+      }
+
       const balance = await this.tokenContract.balanceOf(walletAddress);
       const decimals = await this.tokenContract.decimals();
       const formattedBalance = ethers.formatUnits(balance, decimals);
@@ -53,6 +63,17 @@ export class TokenService {
     contractAddress: string;
   }> {
     try {
+      // Check if token contract is deployed
+      if (config.tokenContractAddress === '0x0000000000000000000000000000000000000000') {
+        return {
+          name: 'QUIB Token',
+          symbol: 'QUIB',
+          decimals: 18,
+          totalSupply: '0',
+          contractAddress: '0x0000000000000000000000000000000000000000'
+        };
+      }
+
       const [name, symbol, decimals, totalSupply] = await Promise.all([
         this.tokenContract.name(),
         this.tokenContract.symbol(),

@@ -22,7 +22,7 @@ export const config = {
   bnbChainId: parseInt(process.env.BNB_CHAIN_ID || '56', 10),
   
   // Token
-  tokenContractAddress: process.env.TOKEN_CONTRACT_ADDRESS!,
+  tokenContractAddress: process.env.TOKEN_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000',
   tokenDecimals: parseInt(process.env.TOKEN_DECIMALS || '18', 10),
   
   // Rate Limiting
@@ -38,8 +38,7 @@ export const config = {
 const requiredEnvVars = [
   'DATABASE_URL',
   'JWT_SECRET',
-  'OPENAI_API_KEY',
-  'TOKEN_CONTRACT_ADDRESS'
+  'OPENAI_API_KEY'
 ];
 
 for (const envVar of requiredEnvVars) {
