@@ -12,8 +12,8 @@ const app = express();
 app.use(helmet());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.com'] 
-    : ['http://localhost:3000', 'http://localhost:3001'],
+    ? ['https://your-frontend-domain.com', 'https://*.lovable.app'] 
+    : ['http://localhost:3000', 'http://localhost:3001', 'https://*.lovable.app'],
   credentials: true
 }));
 
@@ -28,6 +28,17 @@ app.use(apiLimiter);
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path} - ${req.ip}`);
   next();
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    success: true,
+    message: 'QUIB Backend API is running',
+    mode: config.hybridMode ? 'hybrid' : 'standalone',
+    timestamp: new Date().toISOString(),
+    environment: config.nodeEnv
+  });
 });
 
 // API routes

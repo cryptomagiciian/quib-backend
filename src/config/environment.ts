@@ -7,7 +7,7 @@ export const config = {
   port: parseInt(process.env.PORT || '3000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   
-  // Database
+  // Database (Optional - for hybrid mode with Lovable)
   databaseUrl: process.env.DATABASE_URL || '',
   
   // JWT
@@ -32,6 +32,10 @@ export const config = {
   // Development
   devWallets: process.env.DEV_WALLETS?.split(',').map(w => w.trim()) || [],
   enableEvolutionTest: process.env.ENABLE_EVOLUTION_TEST === 'true',
+  
+  // Hybrid Mode (Lovable Integration)
+  hybridMode: process.env.HYBRID_MODE === 'true' || true, // Default to hybrid mode
+  lovableApiKey: process.env.LOVABLE_API_KEY || '',
 };
 
 // Validate required environment variables
@@ -46,13 +50,16 @@ for (const envVar of requiredEnvVars) {
 }
 
 // Warn about missing optional variables
-if (!process.env.DATABASE_URL) {
+if (!process.env.DATABASE_URL && !config.hybridMode) {
   console.warn('WARNING: DATABASE_URL not set. Database features will not work.');
 }
 
-// Warn about missing optional variables
 if (!process.env.OPENAI_API_KEY) {
   console.warn('WARNING: OPENAI_API_KEY not set. AI features will not work.');
+}
+
+if (config.hybridMode) {
+  console.log('🚀 Running in HYBRID MODE - Lovable handles database, backend handles AI');
 }
 
 export default config;
