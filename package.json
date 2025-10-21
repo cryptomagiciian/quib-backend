@@ -4,13 +4,14 @@
   "description": "Backend system for QUIB creature evolution game with BNB blockchain integration",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npx prisma generate",
+    "build": "npx prisma generate && npx prisma db push",
     "start": "npx ts-node src/index.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
     "migrate": "npx prisma migrate dev",
-    "generate": "npx prisma generate"
+    "generate": "npx prisma generate",
+    "db:push": "npx prisma db push"
   },
   "keywords": ["game", "blockchain", "bnb", "evolution", "creature"],
   "author": "QUIB Team",
