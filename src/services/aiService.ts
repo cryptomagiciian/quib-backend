@@ -24,12 +24,22 @@ export class AIService {
   ): Promise<{ response: string; sentimentScore: number; keywords: string[] }> {
     try {
       // Get personality profile from database
+      logger.info('Getting personality profile for user:', userId);
       const personality = await personalityService.getPersonalityProfile(userId);
+      logger.info('Personality profile retrieved:', personality);
       
       // Analyze user's message for intent and emotional tone
+      logger.info('Analyzing intent for message:', userMessage);
       const intent = await this.analyzeIntent(userMessage);
+      logger.info('Intent analysis result:', intent);
+      
+      logger.info('Analyzing sentiment for message:', userMessage);
       const sentimentScore = await this.analyzeSentiment(userMessage);
+      logger.info('Sentiment analysis result:', sentimentScore);
+      
+      logger.info('Extracting keywords for message:', userMessage);
       const keywords = await personalityService.extractKeywords(userMessage);
+      logger.info('Keywords extracted:', keywords);
       
       // Build advanced personality-aware context
       const context = this.buildAdvancedPersonalityContext(
@@ -75,6 +85,16 @@ export class AIService {
       logger.error('Advanced AI service error:', error);
       logger.error('Error details:', error.message);
       logger.error('Stack trace:', error.stack);
+      logger.error('Error type:', typeof error);
+      logger.error('Error constructor:', error.constructor.name);
+      
+      // Log the specific error for debugging
+      if (error.message) {
+        logger.error('Error message:', error.message);
+      }
+      if (error.code) {
+        logger.error('Error code:', error.code);
+      }
       
       // Fallback to simple response
       return {
